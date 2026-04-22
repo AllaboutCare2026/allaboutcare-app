@@ -1,214 +1,103 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Meine Wissensseite</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f6fa;
-      color: #222;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meine Wissensseite</title>
 
-    header {
-      background: #ffffff;
-      padding: 24px;
-      text-align: center;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    }
+<style>
+body{
+font-family:Arial,sans-serif;
+margin:0;
+padding:0;
+background:#f4f6f8;
+color:#222;
+}
 
-    h1 {
-      margin: 0;
-      font-size: 28px;
-    }
+header{
+background:white;
+padding:25px;
+text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
 
-    main {
-      max-width: 1000px;
-      margin: 30px auto;
-      padding: 0 20px 40px;
-    }
+h1{
+margin:0;
+}
 
-    .info-box {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 18px 20px;
-      margin-bottom: 24px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    }
+main{
+max-width:1000px;
+margin:30px auto;
+padding:20px;
+}
 
-    .info-box p {
-      margin: 0;
-      line-height: 1.5;
-    }
+.card{
+background:white;
+padding:20px;
+margin-bottom:20px;
+border-radius:14px;
+box-shadow:0 2px 8px rgba(0,0,0,0.06);
+}
 
-    .card {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    }
+.card h2{
+margin-top:0;
+}
 
-    .card h2 {
-      margin-top: 0;
-      margin-bottom: 12px;
-      font-size: 22px;
-    }
+a{
+color:#1459c7;
+text-decoration:none;
+}
 
-    .card p {
-      margin-top: 0;
-      line-height: 1.5;
-    }
-
-    .links {
-      margin-top: 14px;
-      padding-left: 20px;
-    }
-
-    .links li {
-      margin-bottom: 10px;
-    }
-
-    .links a {
-      color: #1459c7;
-      text-decoration: none;
-      word-break: break-word;
-    }
-
-    .links a:hover {
-      text-decoration: underline;
-    }
-
-    .loading,
-    .error,
-    .empty {
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    }
-  </style>
+a:hover{
+text-decoration:underline;
+}
+</style>
 </head>
+
 <body>
-  <header>
-    <h1>Meine Wissensseite</h1>
-  </header>
 
-  <main>
-    <div class="info-box">
-      <p>
-        Diese Seite lädt die Inhalte automatisch aus deinem Padlet.
-        Änderungen im Padlet werden nach dem Neuladen der Seite übernommen.
-      </p>
-    </div>
+<header>
+<h1>Meine Wissensseite</h1>
+</header>
 
-    <div id="content" class="loading">Inhalte werden geladen ...</div>
-  </main>
+<main>
+<div id="content">Inhalte werden geladen ...</div>
+</main>
 
-  <script>
-    const boardId = "HIER_DEINE_BOARD_ID_EINTRAGEN";
-    const apiUrl = `/api/boards?id=${boardId}`;
-    const content = document.getElementById("content");
+<script>
+const boardId = "l0flghcaccsctf3a";
 
-    function extractLinksFromText(text) {
-      if (!text) return [];
-      const regex = /(https?:\/\/[^\s"<]+)/g;
-      return text.match(regex) || [];
-    }
+fetch(`/api/boards?id=${boardId}`)
+.then(response => response.json())
+.then(data => {
 
-    function renderPosts(posts) {
-      if (!posts || posts.length === 0) {
-        content.className = "empty";
-        content.innerHTML = "Keine Inhalte gefunden.";
-        return;
-      }
+let html = "";
 
-      content.className = "";
-      content.innerHTML = "";
+if(data.posts && data.posts.length > 0){
 
-      posts.forEach((post) => {
-        const card = document.createElement("div");
-        card.className = "card";
+data.posts.forEach(post => {
 
-        const title = document.createElement("h2");
-        title.textContent = post.title || "Ohne Titel";
-        card.appendChild(title);
+html += `
+<div class="card">
+<h2>${post.title || "Ohne Titel"}</h2>
+<p>${post.body || ""}</p>
+</div>
+`;
 
-        if (post.body) {
-          const text = document.createElement("p");
-          text.textContent = post.body;
-          card.appendChild(text);
-        }
+});
 
-        const allLinks = [];
+}else{
+html = "<div class='card'>Keine Inhalte gefunden.</div>";
+}
 
-        const textLinks = extractLinksFromText(post.body);
-        textLinks.forEach((link) => {
-          allLinks.push({
-            name: link,
-            url: link
-          });
-        });
+document.getElementById("content").innerHTML = html;
 
-        if (post.attachments && Array.isArray(post.attachments)) {
-          post.attachments.forEach((file) => {
-            if (file.url) {
-              allLinks.push({
-                name: file.name || "Datei öffnen",
-                url: file.url
-              });
-            }
-          });
-        }
+})
+.catch(error => {
+document.getElementById("content").innerHTML =
+"<div class='card'>Fehler beim Laden.</div>";
+});
+</script>
 
-        if (allLinks.length > 0) {
-          const list = document.createElement("ul");
-          list.className = "links";
-
-          allLinks.forEach((item) => {
-            const li = document.createElement("li");
-            const a = document.createElement("a");
-            a.href = item.url;
-            a.target = "_blank";
-            a.rel = "noopener noreferrer";
-            a.textContent = item.name;
-            li.appendChild(a);
-            list.appendChild(li);
-          });
-
-          card.appendChild(list);
-        }
-
-        content.appendChild(card);
-      });
-    }
-
-    async function loadPadletContent() {
-      try {
-        const response = await fetch(apiUrl);
-
-        if (!response.ok) {
-          throw new Error("API konnte nicht geladen werden.");
-        }
-
-        const data = await response.json();
-
-        if (!data || !data.posts) {
-          throw new Error("Keine gültigen Daten erhalten.");
-        }
-
-        renderPosts(data.posts);
-      } catch (error) {
-        content.className = "error";
-        content.innerHTML = "Fehler beim Laden der Inhalte.";
-        console.error(error);
-      }
-    }
-
-    loadPadletContent();
-  </script>
 </body>
 </html>
