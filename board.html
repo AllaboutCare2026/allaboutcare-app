@@ -1,312 +1,230 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>All About Care</title>
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All About Care</title>
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f7f2eb;
-      color: #3d3128;
-    }
+<style>
+*{box-sizing:border-box;}
 
-    .topbar {
-      background: #fffaf5;
-      border-bottom: 1px solid #eadfce;
-      padding: 22px 28px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#f7f2eb;
+color:#3d3128;
+}
 
-    .back-link {
-      display: inline-block;
-      margin-bottom: 12px;
-      text-decoration: none;
-      color: #8a7463;
-      font-size: 15px;
-    }
+.topbar{
+background:#fffaf5;
+border-bottom:1px solid #eadfce;
+padding:22px 28px;
+position:sticky;
+top:0;
+z-index:10;
+}
 
-    .back-link:hover {
-      text-decoration: underline;
-    }
+.back-link{
+display:inline-block;
+margin-bottom:12px;
+text-decoration:none;
+color:#8a7463;
+font-size:15px;
+}
 
-    .title {
-      margin: 0;
-      font-size: 32px;
-      font-weight: 700;
-      color: #5b4636;
-    }
+.title{
+margin:0;
+font-size:32px;
+font-weight:700;
+color:#5b4636;
+}
 
-    .subtitle {
-      margin-top: 6px;
-      font-size: 15px;
-      color: #8a7463;
-    }
+.subtitle{
+margin-top:6px;
+font-size:15px;
+color:#8a7463;
+}
 
-    .container {
-      padding: 28px;
-    }
+.container{
+padding:28px;
+}
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 24px;
-    }
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:24px;
+}
 
-    .card {
-      display: block;
-      text-decoration: none;
-      color: inherit;
-      background: #fffaf5;
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(80, 58, 39, 0.08);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-      min-height: 240px;
-      border: 1px solid #eee2d4;
-    }
+.card{
+display:block;
+text-decoration:none;
+color:inherit;
+background:#fffaf5;
+border-radius:22px;
+overflow:hidden;
+box-shadow:0 8px 24px rgba(80,58,39,.08);
+min-height:230px;
+border:1px solid #eee2d4;
+}
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 32px rgba(80, 58, 39, 0.12);
-    }
+.card:hover{
+transform:translateY(-4px);
+transition:.2s;
+}
 
-    .card-color {
-      height: 170px;
-      width: 100%;
-      display: flex;
-      align-items: flex-end;
-      justify-content: flex-start;
-      padding: 18px;
-    }
+.card-color{
+height:170px;
+padding:18px;
+display:flex;
+align-items:flex-end;
+}
 
-    .card-color-title {
-      color: white;
-      font-size: 26px;
-      font-weight: 700;
-      line-height: 1.2;
-    }
+.card-title-big{
+color:white;
+font-size:26px;
+font-weight:700;
+line-height:1.2;
+}
 
-    .card-body {
-      padding: 18px;
-    }
+.card-body{
+padding:18px;
+}
 
-    .card-text {
-      margin: 0;
-      color: #866f5f;
-      font-size: 15px;
-      line-height: 1.45;
-    }
+.card-text{
+margin:0;
+font-size:15px;
+color:#866f5f;
+}
 
-    .loading,
-    .error {
-      font-size: 18px;
-      padding: 24px 0;
-      color: #7a6556;
-    }
-
-    @media (max-width: 1200px) {
-      .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 640px) {
-      .container {
-        padding: 18px;
-      }
-
-      .topbar {
-        padding: 18px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .title {
-        font-size: 26px;
-      }
-    }
-  </style>
+.loading,.error{
+font-size:18px;
+padding:24px 0;
+color:#7a6556;
+}
+</style>
 </head>
+
 <body>
-  <header class="topbar">
-    <a class="back-link" href="index.html">← Zurück zur Übersicht</a>
-    <h1 id="pageTitle" class="title">Bereich</h1>
-    <div class="subtitle">Kategorien</div>
-  </header>
 
-  <main class="container">
-    <div id="status" class="loading">Kacheln werden geladen ...</div>
-    <div id="grid" class="grid" style="display:none;"></div>
-  </main>
+<header class="topbar">
+<a class="back-link" href="index.html">← Zurück zur Übersicht</a>
+<h1 id="pageTitle" class="title">Bereich</h1>
+<div class="subtitle">Kategorien</div>
+</header>
 
-  <script>
-    const fallbackColors = [
-      "#d9a98f",
-      "#b7c9a8",
-      "#e7c89b",
-      "#c8b6d8",
-      "#9fc7c1",
-      "#e6b8b7",
-      "#d4c29a",
-      "#a8bfd8",
-      "#d9bfa7",
-      "#b8d8c1"
-    ];
+<main class="container">
+<div id="status" class="loading">Kacheln werden geladen ...</div>
+<div id="grid" class="grid" style="display:none;"></div>
+</main>
 
-    function escapeHtml(text) {
-      return String(text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
+<script>
+const colors=[
+"#d9a98f",
+"#b7c9a8",
+"#e7c89b",
+"#c8b6d8",
+"#9fc7c1",
+"#e6b8b7",
+"#d4c29a",
+"#a8bfd8"
+];
 
-    function getQueryParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      return params.get(name);
-    }
+function getId(){
+const p=new URLSearchParams(window.location.search);
+return p.get("id");
+}
 
-    function extractSectionId(post) {
-      return post?.relationships?.section?.data?.id || "";
-    }
+function esc(t){
+return String(t||"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;");
+}
 
-    function extractSectionTitle(post) {
-      const sectionData = post?.relationships?.section?.data || {};
-      return (
-        sectionData.title ||
-        sectionData.name ||
-        sectionData.subject ||
-        ""
-      );
-    }
+function createCard(section,index,boardId){
+const color=colors[index%colors.length];
 
-    function getTitleFromPost(post) {
-      const attrs = post?.attributes || {};
-      return (
-        attrs.title ||
-        attrs.subject ||
-        attrs.name ||
-        attrs.headline ||
-        ""
-      );
-    }
+return `
+<a class="card" href="detail.html?board=${boardId}&section=${section.id}">
+<div class="card-color" style="background:${color}">
+<div class="card-title-big">${esc(section.title)}</div>
+</div>
+<div class="card-body">
+<p class="card-text">${section.count} Einträge</p>
+</div>
+</a>
+`;
+}
 
-    function getSectionName(sectionId, postsInSection) {
-      const fromPost = postsInSection
-        .map(extractSectionTitle)
-        .find(Boolean);
+async function load(){
+const status=document.getElementById("status");
+const grid=document.getElementById("grid");
+const pageTitle=document.getElementById("pageTitle");
+const boardId=getId();
 
-      if (fromPost) return fromPost;
+if(!boardId){
+status.className="error";
+status.textContent="Keine ID gefunden";
+return;
+}
 
-      const firstTitle = postsInSection
-        .map(getTitleFromPost)
-        .find(Boolean);
+try{
 
-      return firstTitle || "Ohne Titel";
-    }
+const me=await fetch("/api/me");
+const meData=await me.json();
 
-    function createCard(section, index, boardId) {
-      const color = fallbackColors[index % fallbackColors.length];
-      const title = escapeHtml(section.title || "Ohne Titel");
-      const countText = section.count === 1 ? "1 Eintrag" : `${section.count} Einträge`;
+if(meData.boards){
+const current=meData.boards.find(x=>x.id===boardId);
+if(current) pageTitle.textContent=current.title;
+}
 
-      return `
-        <a class="card" href="detail.html?board=${encodeURIComponent(boardId)}&section=${encodeURIComponent(section.id)}">
-          <div class="card-color" style="background:${color};">
-            <div class="card-color-title">${title}</div>
-          </div>
-          <div class="card-body">
-            <p class="card-text">${countText}</p>
-          </div>
-        </a>
-      `;
-    }
+const res=await fetch("/api/boards?id="+boardId);
+const data=await res.json();
 
-    async function loadBoard() {
-      const status = document.getElementById("status");
-      const grid = document.getElementById("grid");
-      const pageTitle = document.getElementById("pageTitle");
-      const boardId = getQueryParam("id");
+const posts=Array.isArray(data.posts)?data.posts:[];
+const apiSections=Array.isArray(data.sections)?data.sections:[];
 
-      if (!boardId) {
-        status.className = "error";
-        status.textContent = "Keine Board-ID gefunden.";
-        return;
-      }
+const countMap=new Map();
 
-      try {
-        const boardsResponse = await fetch("/api/me");
-        const boardsData = await boardsResponse.json();
+posts.forEach(post=>{
+const sid=post.sectionId||"";
+if(!sid) return;
+countMap.set(sid,(countMap.get(sid)||0)+1);
+});
 
-        if (boardsData.boards && Array.isArray(boardsData.boards)) {
-          const currentBoard = boardsData.boards.find(board => board.id === boardId);
-          if (currentBoard && currentBoard.title) {
-            pageTitle.textContent = currentBoard.title;
-          }
-        }
+let sections=[];
 
-        const response = await fetch(`/api/boards?id=${encodeURIComponent(boardId)}`);
-        const data = await response.json();
+if(apiSections.length>0){
 
-        if (!data.posts || !Array.isArray(data.posts)) {
-          throw new Error("Keine Inhalte gefunden");
-        }
+sections=apiSections.map(sec=>({
+id:sec.id,
+title:sec.title||"Ohne Titel",
+count:countMap.get(sec.id)||0
+})).filter(x=>x.count>0);
 
-        const posts = data.posts;
-        const sectionMap = new Map();
+}else{
 
-        posts.forEach(post => {
-          const sectionId = extractSectionId(post);
-          if (!sectionId) return;
+sections=Array.from(countMap.entries()).map(([id,count],i)=>({
+id:id,
+title:"Kategorie "+(i+1),
+count:count
+}));
 
-          if (!sectionMap.has(sectionId)) {
-            sectionMap.set(sectionId, []);
-          }
-          sectionMap.get(sectionId).push(post);
-        });
+}
 
-        const sections = Array.from(sectionMap.entries()).map(([sectionId, sectionPosts]) => {
-          const rawTitle = getSectionName(sectionId, sectionPosts);
-          const match = String(rawTitle).match(/^(\d+)/);
-          const order = match ? parseInt(match[1], 10) : 9999;
+grid.innerHTML=sections.map((s,i)=>createCard(s,i,boardId)).join("");
+status.style.display="none";
+grid.style.display="grid";
 
-          return {
-            id: sectionId,
-            title: rawTitle,
-            count: sectionPosts.length,
-            order
-          };
-        });
+}catch(e){
+status.className="error";
+status.textContent="Kacheln konnten nicht geladen werden.";
+}
 
-        sections.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "de"));
+}
 
-        grid.innerHTML = sections.map((section, index) => createCard(section, index, boardId)).join("");
-        status.style.display = "none";
-        grid.style.display = "grid";
-      } catch (error) {
-        status.className = "error";
-        status.textContent = "Die Kacheln konnten nicht geladen werden.";
-      }
-    }
+load();
+</script>
 
-    loadBoard();
-  </script>
 </body>
 </html>
