@@ -1,172 +1,294 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bereich</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All About Care</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-<style>
-*{
-box-sizing:border-box;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f2eb;
+      color: #3d3128;
+    }
 
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#f6f1ea;
-color:#1f1f1f;
-}
+    .topbar {
+      background: #fffaf5;
+      border-bottom: 1px solid #eadfce;
+      padding: 22px 28px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
 
-.wrap{
-max-width:1100px;
-margin:auto;
-padding:50px 20px;
-}
+    .back-link {
+      display: inline-block;
+      margin-bottom: 12px;
+      text-decoration: none;
+      color: #8a7463;
+      font-size: 15px;
+    }
 
-.back{
-display:inline-block;
-margin-bottom:24px;
-text-decoration:none;
-color:#333;
-font-weight:bold;
-font-size:15px;
-}
+    .back-link:hover {
+      text-decoration: underline;
+    }
 
-h1{
-font-size:42px;
-margin:0 0 12px;
-}
+    .title {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 700;
+      color: #5b4636;
+    }
 
-.status{
-margin-bottom:30px;
-color:#666;
-font-size:16px;
-}
+    .subtitle {
+      margin-top: 6px;
+      font-size: 15px;
+      color: #8a7463;
+    }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:22px;
-}
+    .container {
+      padding: 28px;
+    }
 
-.card{
-background:white;
-border-radius:22px;
-padding:24px;
-box-shadow:0 10px 24px rgba(0,0,0,0.06);
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 24px;
+    }
 
-.card h2{
-margin:0 0 12px;
-font-size:24px;
-line-height:1.3;
-}
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: #fffaf5;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(80, 58, 39, 0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      min-height: 280px;
+      border: 1px solid #eee2d4;
+    }
 
-.card p{
-margin:0 0 18px;
-line-height:1.6;
-color:#555;
-white-space:pre-line;
-}
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 32px rgba(80, 58, 39, 0.12);
+    }
 
-.button{
-display:inline-block;
-padding:10px 16px;
-background:#111;
-color:white;
-text-decoration:none;
-border-radius:10px;
-font-size:14px;
-}
+    .card-image,
+    .card-color {
+      height: 180px;
+      width: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-start;
+      padding: 18px;
+      position: relative;
+    }
 
-.empty{
-background:white;
-padding:25px;
-border-radius:20px;
-box-shadow:0 10px 24px rgba(0,0,0,0.06);
-}
-</style>
+    .card-image {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .card-image::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(61,49,40,0.45), rgba(61,49,40,0.05));
+    }
+
+    .card-image-title {
+      position: relative;
+      z-index: 1;
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .card-body {
+      padding: 18px 18px 20px 18px;
+    }
+
+    .card-title {
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 1.25;
+      margin: 0 0 10px 0;
+      color: #4e3e31;
+    }
+
+    .card-text {
+      margin: 0;
+      color: #866f5f;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+
+    .loading,
+    .error {
+      font-size: 18px;
+      padding: 24px 0;
+      color: #7a6556;
+    }
+
+    @media (max-width: 1200px) {
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 18px;
+      }
+
+      .topbar {
+        padding: 18px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .title {
+        font-size: 26px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <header class="topbar">
+    <a class="back-link" href="index.html">← Zurück zur Übersicht</a>
+    <h1 id="pageTitle" class="title">Bereich</h1>
+    <div class="subtitle">Unterthemen</div>
+  </header>
 
-<div class="wrap">
+  <main class="container">
+    <div id="status" class="loading">Kacheln werden geladen ...</div>
+    <div id="grid" class="grid" style="display:none;"></div>
+  </main>
 
-<a class="back" href="/">← Zurück zur Übersicht</a>
+  <script>
+    const fallbackColors = [
+      "#d9a98f",
+      "#b7c9a8",
+      "#e7c89b",
+      "#c8b6d8",
+      "#9fc7c1",
+      "#e6b8b7",
+      "#d4c29a",
+      "#a8bfd8",
+      "#d9bfa7",
+      "#b8d8c1"
+    ];
 
-<h1 id="title">Bereich</h1>
-
-<div id="status" class="status">Lade Inhalte …</div>
-
-<div id="grid" class="grid"></div>
-
-</div>
-
-<script>
-const params = new URLSearchParams(window.location.search);
-const boardId = params.get("id");
-const title = params.get("title") || "Bereich";
-
-document.getElementById("title").textContent = decodeURIComponent(title);
-document.title = decodeURIComponent(title);
-
-async function loadBoard() {
-  const status = document.getElementById("status");
-  const grid = document.getElementById("grid");
-
-  if (!boardId) {
-    status.textContent = "Keine Board-ID übergeben.";
-    return;
-  }
-
-  try {
-    const res = await fetch("/api/board?id=" + encodeURIComponent(boardId));
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || "Fehler");
+    function escapeHtml(text) {
+      return String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
-    const posts = data.posts || [];
+    function getQueryParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
 
-    if (!posts.length) {
-      status.innerHTML = "";
-      grid.innerHTML = `
-        <div class="empty">
-          <strong>Keine Inhalte gefunden.</strong><br><br>
-          Dieses Padlet enthält aktuell keine auslesbaren Beiträge.
-        </div>
+    function createCard(post, index) {
+      const color = fallbackColors[index % fallbackColors.length];
+      const title = escapeHtml(post.title || "Ohne Titel");
+      const text = escapeHtml(post.text || "");
+      const image = post.image || post.cover || post.thumbnail || "";
+      const link = post.url || "#";
+
+      if (image) {
+        return `
+          <a class="card" href="${link}" target="_blank" rel="noopener noreferrer">
+            <div class="card-image" style="background-image:url('${image}')">
+              <div class="card-image-title">${title}</div>
+            </div>
+            <div class="card-body">
+              <p class="card-text">${text || "Öffnen"}</p>
+            </div>
+          </a>
+        `;
+      }
+
+      return `
+        <a class="card" href="${link}" target="_blank" rel="noopener noreferrer">
+          <div class="card-color" style="background:${color};">
+            <div class="card-image-title">${title}</div>
+          </div>
+          <div class="card-body">
+            <h2 class="card-title">${title}</h2>
+            <p class="card-text">${text || "Öffnen"}</p>
+          </div>
+        </a>
       `;
-      return;
     }
 
-    status.textContent = "";
+    async function loadBoard() {
+      const status = document.getElementById("status");
+      const grid = document.getElementById("grid");
+      const pageTitle = document.getElementById("pageTitle");
+      const boardId = getQueryParam("id");
 
-    grid.innerHTML = posts.map(post => `
-      <div class="card">
-        <h2>${escapeHtml(post.title)}</h2>
-        <p>${escapeHtml(post.text || "")}</p>
-        ${post.url ? `<a class="button" href="${post.url}" target="_blank">Öffnen</a>` : ""}
-      </div>
-    `).join("");
+      if (!boardId) {
+        status.className = "error";
+        status.textContent = "Keine Board-ID gefunden.";
+        return;
+      }
 
-  } catch(error) {
-    status.textContent = "Inhalte konnten nicht geladen werden.";
-    console.error(error);
-  }
-}
+      try {
+        const boardsResponse = await fetch("/api/me");
+        const boardsData = await boardsResponse.json();
 
-function escapeHtml(str){
-  return String(str)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
+        if (boardsData.boards && Array.isArray(boardsData.boards)) {
+          const currentBoard = boardsData.boards.find(board => board.id === boardId);
+          if (currentBoard && currentBoard.title) {
+            pageTitle.textContent = currentBoard.title;
+          }
+        }
 
-loadBoard();
-</script>
+        const response = await fetch(`/api/boards?id=${encodeURIComponent(boardId)}`);
+        const data = await response.json();
 
+        if (!data.posts || !Array.isArray(data.posts)) {
+          throw new Error("Keine Inhalte gefunden");
+        }
+
+        const posts = data.posts.sort((a, b) => {
+          const aMatch = (a.title || "").match(/^(\d+)/);
+          const bMatch = (b.title || "").match(/^(\d+)/);
+          const aNum = aMatch ? parseInt(aMatch[1], 10) : 9999;
+          const bNum = bMatch ? parseInt(bMatch[1], 10) : 9999;
+          return aNum - bNum;
+        });
+
+        grid.innerHTML = posts.map(createCard).join("");
+        status.style.display = "none";
+        grid.style.display = "grid";
+      } catch (error) {
+        status.className = "error";
+        status.textContent = "Die Kacheln konnten nicht geladen werden.";
+      }
+    }
+
+    loadBoard();
+  </script>
 </body>
 </html>
