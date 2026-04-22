@@ -1,26 +1,71 @@
-<!-- update -->
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>All About Care</title>
-<style>
-body{
-margin:0;
-font-family:Arial, sans-serif;
-background:#f4f4f4;
-}
-iframe{
-width:100%;
-height:100vh;
-border:none;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All About Care</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+    }
+    header {
+      background: white;
+      padding: 16px;
+      border-bottom: 1px solid #ddd;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    h1 {
+      margin: 0 0 12px 0;
+      font-size: 28px;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 10px;
+      background: #111;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    iframe {
+      width: 100%;
+      height: calc(100vh - 95px);
+      border: none;
+      display: block;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <h1>All About Care</h1>
+    <div class="buttons">
+      <button onclick="loadPadlet('PADLET_LINK_1')">Padlet 1</button>
+      <button onclick="loadPadlet('PADLET_LINK_2')">Padlet 2</button>
+      <button onclick="loadPadlet('PADLET_LINK_3')">Padlet 3</button>
+      <button onclick="loadPadlet('PADLET_LINK_4')">Padlet 4</button>
+      <button onclick="loadPadlet('PADLET_LINK_5')">Padlet 5</button>
+    </div>
+  </header>
 
-<iframe src="https://padlet.com/allaboutcare"></iframe>
+  <iframe id="padletFrame" src="PADLET_LINK_1"></iframe>
 
+  <script>
+    function loadPadlet(link) {
+      document.getElementById('padletFrame').src = link;
+    }
+  </script>
 </body>
 </html>
