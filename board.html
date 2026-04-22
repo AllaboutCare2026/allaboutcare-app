@@ -101,6 +101,20 @@ font-size:18px;
 padding:24px 0;
 color:#7a6556;
 }
+
+@media (max-width:1100px){
+.grid{grid-template-columns:repeat(3,1fr);}
+}
+
+@media (max-width:800px){
+.grid{grid-template-columns:repeat(2,1fr);}
+}
+
+@media (max-width:560px){
+.grid{grid-template-columns:1fr;}
+.container{padding:18px;}
+.topbar{padding:18px;}
+}
 </style>
 </head>
 
@@ -119,14 +133,8 @@ color:#7a6556;
 
 <script>
 const colors=[
-"#d9a98f",
-"#b7c9a8",
-"#e7c89b",
-"#c8b6d8",
-"#9fc7c1",
-"#e6b8b7",
-"#d4c29a",
-"#a8bfd8"
+"#d9a98f","#b7c9a8","#e7c89b","#c8b6d8",
+"#9fc7c1","#e6b8b7","#d4c29a","#a8bfd8"
 ];
 
 function getId(){
@@ -157,6 +165,7 @@ return `
 }
 
 async function load(){
+
 const status=document.getElementById("status");
 const grid=document.getElementById("grid");
 const pageTitle=document.getElementById("pageTitle");
@@ -175,7 +184,7 @@ const meData=await me.json();
 
 if(meData.boards){
 const current=meData.boards.find(x=>x.id===boardId);
-if(current) pageTitle.textContent=current.title;
+if(current){pageTitle.textContent=current.title;}
 }
 
 const res=await fetch("/api/boards?id="+boardId);
@@ -188,31 +197,23 @@ const countMap=new Map();
 
 posts.forEach(post=>{
 const sid=post.sectionId||"";
-if(!sid) return;
+if(!sid)return;
 countMap.set(sid,(countMap.get(sid)||0)+1);
 });
 
 let sections=[];
 
-if(apiSections.length>0){
-
-sections=apiSections.map(sec=>({
+sections=apiSections
+.map(sec=>({
 id:sec.id,
-title:sec.title||"Ohne Titel",
-count:countMap.get(sec.id)||0
-})).filter(x=>x.count>0);
-
-}else{
-
-sections=Array.from(countMap.entries()).map(([id,count],i)=>({
-id:id,
-title:"Kategorie "+(i+1),
-count:count
-}));
-
-}
+title:sec.title || "Ohne Titel",
+count:countMap.get(sec.id) || 0
+}))
+.filter(x=>x.count>0)
+.sort((a,b)=>a.title.localeCompare(b.title,"de"));
 
 grid.innerHTML=sections.map((s,i)=>createCard(s,i,boardId)).join("");
+
 status.style.display="none";
 grid.style.display="grid";
 
