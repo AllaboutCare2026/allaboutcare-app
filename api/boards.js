@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   try {
     const apiKey = process.env.PADLET_API_KEY;
-    const boardId = "board_m4lpvae8jyAKvxvo";
+    const boardId = "m4lpvae8jyAKvxvo";
 
     const response = await fetch(`https://api.padlet.dev/v1/boards/${boardId}`, {
       headers: {
