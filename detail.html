@@ -1,170 +1,138 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All About Care</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All About Care</title>
 
-  <style>
-    body{
-      margin:0;
-      font-family:Arial,sans-serif;
-      background:#f7f2eb;
-      color:#3d3128;
-    }
+<style>
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f7f2eb;
+  color:#3d3128;
+}
 
-    .topbar{
-      background:#fffaf5;
-      padding:22px 28px;
-      border-bottom:1px solid #eadfce;
-    }
+.topbar{
+  background:#fffaf5;
+  padding:22px 28px;
+  border-bottom:1px solid #eadfce;
+}
 
-    .container{
-      padding:28px;
-      max-width:1100px;
-      margin:auto;
-    }
+.container{
+  padding:28px;
+  max-width:1100px;
+  margin:auto;
+}
 
-    .card{
-      background:#fffaf5;
-      padding:20px;
-      border-radius:18px;
-      margin-bottom:18px;
-      box-shadow:0 8px 24px rgba(80,58,39,.08);
-    }
+.card{
+  background:#fffaf5;
+  padding:22px;
+  border-radius:18px;
+  margin-bottom:18px;
+  box-shadow:0 8px 24px rgba(80,58,39,.08);
+}
 
-    .title{
-      font-size:22px;
-      font-weight:700;
-      margin-bottom:10px;
-    }
+.title{
+  font-size:24px;
+  font-weight:700;
+  margin-bottom:12px;
+}
 
-    .text{
-      margin:10px 0;
-      line-height:1.5;
-      white-space:pre-line;
-      word-break:break-word;
-    }
+.text{
+  line-height:1.5;
+  margin-bottom:14px;
+}
 
-    .debug{
-      margin-top:14px;
-      padding:14px;
-      background:#f4eee7;
-      border-radius:12px;
-      font-family:monospace;
-      font-size:13px;
-      line-height:1.45;
-      white-space:pre-wrap;
-      overflow-x:auto;
-    }
-
-    .link{
-      display:block;
-      padding:8px 0;
-      color:#1459c7;
-      text-decoration:none;
-      word-break:break-word;
-    }
-  </style>
+.link{
+  display:inline-block;
+  background:#1459c7;
+  color:white;
+  padding:12px 18px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:600;
+}
+</style>
 </head>
 
 <body>
 
-  <div class="topbar">
-    <a href="javascript:history.back()">← Zurück</a>
-  </div>
+<div class="topbar">
+<a href="javascript:history.back()">← Zurück</a>
+</div>
 
-  <div class="container">
-    <div id="content">Inhalte werden geladen ...</div>
-  </div>
+<div class="container">
+<div id="content">Inhalte werden geladen ...</div>
+</div>
 
-  <script>
-    function getParam(name){
-      return new URLSearchParams(window.location.search).get(name);
-    }
+<script>
+function getParam(name){
+  return new URLSearchParams(window.location.search).get(name);
+}
 
-    function esc(text){
-      return String(text || "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;");
-    }
+function esc(text){
+  return String(text || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
 
-    function cut(obj){
-      try{
-        return JSON.stringify(obj, null, 2).slice(0, 3000);
-      }catch(e){
-        return "JSON konnte nicht dargestellt werden.";
-      }
-    }
+async function load(){
 
-    async function load(){
-      const board = getParam("board");
-      const section = getParam("section");
-      const content = document.getElementById("content");
+  const board = getParam("board");
+  const section = getParam("section");
+  const content = document.getElementById("content");
 
-      if (!board){
-        content.innerHTML = `
-          <div class="card">
-            <div class="title">Fehler</div>
-            <div class="text">Keine Board-ID gefunden.</div>
-          </div>
-        `;
-        return;
-      }
+  try{
 
-      try{
-        const response = await fetch("/api/boards?id=" + encodeURIComponent(board));
-        const data = await response.json();
+    const res = await fetch("/api/boards?id=" + board);
+    const data = await res.json();
 
-        const allPosts = Array.isArray(data.posts) ? data.posts : [];
+    const posts = (data.posts || []).filter(
+      p => String(p.sectionId) === String(section)
+    );
 
-        const posts = section
-          ? allPosts.filter(post => String(post.sectionId || "") === String(section))
-          : allPosts;
+    let html = "";
 
-        if (!posts.length){
-          content.innerHTML = `
-            <div class="card">
-              <div class="title">Keine Inhalte gefunden</div>
-              <div class="text">Für diese section wurden keine Einträge gefunden.</div>
-            </div>
-          `;
-          return;
-        }
+    posts.forEach(post => {
 
-        let html = "";
+      const t = post.text || {};
 
-        posts.forEach((post, index) => {
-          html += `
-            <div class="card">
-              <div class="title">Eintrag ${index + 1}</div>
-              <div class="text"><strong>title:</strong> ${esc(post.title)}</div>
-              <div class="text"><strong>subject:</strong> ${esc(post.subject)}</div>
-              <div class="text"><strong>text:</strong> ${esc(typeof post.text === "string" ? post.text : JSON.stringify(post.text))}</div>
-              <div class="text"><strong>url:</strong> ${esc(post.url)}</div>
-              <div class="text"><strong>sectionId:</strong> ${esc(post.sectionId)}</div>
-              <div class="text"><strong>attachments:</strong> ${esc(JSON.stringify(post.attachments))}</div>
-              <div class="debug">${esc(cut(post))}</div>
-            </div>
-          `;
-        });
+      const title =
+        t.subject ||
+        post.title ||
+        "Eintrag";
 
-        content.innerHTML = html;
+      const text =
+        t.bodyHtml || "";
 
-      } catch(error){
-        content.innerHTML = `
-          <div class="card">
-            <div class="title">Fehler beim Laden</div>
-            <div class="text">${esc(error.message || String(error))}</div>
-          </div>
-        `;
-      }
-    }
+      const link =
+        (t.attachment && t.attachment.url)
+        ? t.attachment.url
+        : post.url;
 
-    load();
-  </script>
+      html += `
+        <div class="card">
+          <div class="title">${esc(title)}</div>
+
+          ${text ? `<div class="text">${text}</div>` : ""}
+
+          ${link ? `<a class="link" href="${link}" target="_blank">Öffnen</a>` : ""}
+        </div>
+      `;
+    });
+
+    content.innerHTML = html || "Keine Inhalte gefunden.";
+
+  }catch(e){
+    content.innerHTML = "Fehler beim Laden.";
+  }
+}
+
+load();
+</script>
 
 </body>
 </html>
