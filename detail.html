@@ -1,167 +1,217 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>All About Care</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All About Care</title>
 
-<style>
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f7f2eb;
-  color:#3d3128;
-}
+  <style>
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:#f7f2eb;
+      color:#3d3128;
+    }
 
-.topbar{
-  background:#fffaf5;
-  padding:22px 28px;
-  border-bottom:1px solid #eadfce;
-}
+    .topbar{
+      background:#fffaf5;
+      padding:22px 28px;
+      border-bottom:1px solid #eadfce;
+    }
 
-.container{
-  padding:28px;
-  max-width:1100px;
-  margin:auto;
-}
+    .container{
+      padding:28px;
+      max-width:1100px;
+      margin:auto;
+    }
 
-.card{
-  background:#fffaf5;
-  padding:20px;
-  border-radius:18px;
-  margin-bottom:18px;
-  box-shadow:0 8px 24px rgba(80,58,39,.08);
-}
+    .card{
+      background:#fffaf5;
+      padding:20px;
+      border-radius:18px;
+      margin-bottom:18px;
+      box-shadow:0 8px 24px rgba(80,58,39,.08);
+    }
 
-.title{
-  font-size:22px;
-  font-weight:700;
-  margin-bottom:10px;
-}
+    .title{
+      font-size:22px;
+      font-weight:700;
+      margin-bottom:10px;
+    }
 
-.text{
-  margin:10px 0;
-  line-height:1.5;
-  white-space:pre-line;
-}
+    .text{
+      margin:10px 0;
+      line-height:1.5;
+      white-space:pre-line;
+    }
 
-.link{
-  display:block;
-  padding:8px 0;
-  color:#1459c7;
-  text-decoration:none;
-  word-break:break-word;
-}
-</style>
+    .link{
+      display:block;
+      padding:8px 0;
+      color:#1459c7;
+      text-decoration:none;
+      word-break:break-word;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="topbar">
-<a href="javascript:history.back()">← Zurück</a>
-</div>
+  <div class="topbar">
+    <a href="javascript:history.back()">← Zurück</a>
+  </div>
 
-<div class="container">
-<div id="content">Inhalte werden geladen ...</div>
-</div>
+  <div class="container">
+    <div id="content">Inhalte werden geladen ...</div>
+  </div>
 
-<script>
-function getParam(name){
-  return new URLSearchParams(window.location.search).get(name);
-}
-
-function esc(text){
-  return String(text || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;");
-}
-
-function getTitle(post,index){
-  if(post.title && post.title !== "Ohne Titel") return post.title;
-  if(post.subject) return post.subject;
-  if(post.text) return post.text.split("\n")[0];
-  if(post.url) return post.url;
-  return "Eintrag " + (index+1);
-}
-
-function renderPost(post,index){
-  let html = "";
-  let title = getTitle(post,index);
-
-  html += `<div class="card">`;
-  html += `<div class="title">${esc(title)}</div>`;
-
-  if(post.text && post.text.trim() !== title.trim()){
-    html += `<div class="text">${esc(post.text)}</div>`;
-  }
-
-  if(post.url){
-    html += `<a class="link" href="${post.url}" target="_blank">🔗 Link öffnen</a>`;
-  }
-
-  if(post.attachments && post.attachments.length){
-    post.attachments.forEach(file=>{
-      if(file.url){
-        html += `<a class="link" href="${file.url}" target="_blank">📄 ${esc(file.name || "Datei öffnen")}</a>`;
-      }
-    });
-  }
-
-  html += `</div>`;
-  return html;
-}
-
-async function load(){
-
-  const board = getParam("board");
-  const section = getParam("section");
-  const content = document.getElementById("content");
-
-  if(!board){
-    content.innerHTML = "Keine Board-ID gefunden.";
-    return;
-  }
-
-  try{
-
-    const response = await fetch("/api/boards?id=" + encodeURIComponent(board));
-    const data = await response.json();
-
-    const allPosts = Array.isArray(data.posts) ? data.posts : [];
-
-    let posts = [];
-
-    if(section){
-      posts = allPosts.filter(post =>
-        String(post.sectionId || "") === String(section)
-      );
-    }else{
-      posts = allPosts;
+  <script>
+    function getParam(name){
+      return new URLSearchParams(window.location.search).get(name);
     }
 
-    let html = "";
+    function esc(text){
+      return String(text || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;");
+    }
 
-    posts.forEach((post,index)=>{
-      html += renderPost(post,index);
-    });
+    function asText(value){
+      if (value === null || value === undefined) return "";
+      if (typeof value === "string") return value.trim();
+      if (typeof value === "number" || typeof value === "boolean") return String(value);
+      if (Array.isArray(value)) return value.map(asText).filter(Boolean).join("\n");
+      if (typeof value === "object") {
+        if (typeof value.text === "string") return value.text.trim();
+        if (typeof value.value === "string") return value.value.trim();
+        if (typeof value.content === "string") return value.content.trim();
+        return "";
+      }
+      return "";
+    }
 
-    content.innerHTML = html || "Keine Inhalte gefunden.";
+    function firstLine(value){
+      const text = asText(value);
+      if (!text) return "";
+      return text.split("\n")[0].trim();
+    }
 
-  }catch(error){
+    function getTitle(post,index){
+      const title = asText(post.title);
+      if (title && title !== "Ohne Titel") return title;
 
-    content.innerHTML = `
-      <div class="card">
-        <div class="title">Fehler beim Laden</div>
-        <div class="text">${esc(error.message)}</div>
-      </div>
-    `;
-  }
-}
+      const subject = asText(post.subject);
+      if (subject) return subject;
 
-load();
-</script>
+      const textLine = firstLine(post.text);
+      if (textLine) return textLine;
+
+      const url = asText(post.url);
+      if (url) return url;
+
+      if (post.attachments && post.attachments.length){
+        const firstAttachment = post.attachments[0];
+        if (firstAttachment){
+          const fileName = asText(firstAttachment.name);
+          if (fileName) return fileName;
+        }
+      }
+
+      return "Eintrag " + (index + 1);
+    }
+
+    function renderPost(post,index){
+      const title = getTitle(post,index);
+      const text = asText(post.text);
+      const url = asText(post.url);
+
+      let html = "";
+      html += `<div class="card">`;
+      html += `<div class="title">${esc(title)}</div>`;
+
+      if (text && text !== title){
+        html += `<div class="text">${esc(text)}</div>`;
+      }
+
+      if (url){
+        html += `<a class="link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">🔗 Link öffnen</a>`;
+      }
+
+      if (post.attachments && post.attachments.length){
+        post.attachments.forEach(file => {
+          if (!file) return;
+
+          const fileUrl = asText(file.url);
+          const fileName = asText(file.name) || "Datei öffnen";
+
+          if (fileUrl){
+            html += `<a class="link" href="${esc(fileUrl)}" target="_blank" rel="noopener noreferrer">📄 ${esc(fileName)}</a>`;
+          }
+        });
+      }
+
+      html += `</div>`;
+      return html;
+    }
+
+    async function load(){
+      const board = getParam("board");
+      const section = getParam("section");
+      const content = document.getElementById("content");
+
+      if (!board){
+        content.innerHTML = `
+          <div class="card">
+            <div class="title">Fehler beim Laden</div>
+            <div class="text">Keine Board-ID gefunden.</div>
+          </div>
+        `;
+        return;
+      }
+
+      try{
+        const response = await fetch("/api/boards?id=" + encodeURIComponent(board));
+        const data = await response.json();
+
+        const allPosts = Array.isArray(data.posts) ? data.posts : [];
+
+        let posts = [];
+
+        if (section){
+          posts = allPosts.filter(post =>
+            String(post.sectionId || "") === String(section)
+          );
+        } else {
+          posts = allPosts;
+        }
+
+        let html = "";
+
+        posts.forEach((post,index) => {
+          html += renderPost(post,index);
+        });
+
+        content.innerHTML = html || `
+          <div class="card">
+            <div class="title">Keine Inhalte gefunden</div>
+            <div class="text">Für diesen Bereich wurden keine Einträge gefunden.</div>
+          </div>
+        `;
+
+      } catch(error){
+        content.innerHTML = `
+          <div class="card">
+            <div class="title">Fehler beim Laden</div>
+            <div class="text">${esc(error.message || String(error))}</div>
+          </div>
+        `;
+      }
+    }
+
+    load();
+  </script>
 
 </body>
 </html>
