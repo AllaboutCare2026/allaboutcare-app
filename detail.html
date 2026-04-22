@@ -9,8 +9,9 @@ body{margin:0;font-family:Arial,sans-serif;background:#f7f2eb;color:#3d3128;}
 .topbar{background:#fffaf5;padding:22px 28px;border-bottom:1px solid #eadfce;}
 .container{padding:28px;max-width:1100px;margin:auto;}
 .card{background:#fffaf5;padding:20px;border-radius:18px;margin-bottom:18px;box-shadow:0 8px 24px rgba(80,58,39,.08);}
-.title{font-size:24px;font-weight:700;margin-bottom:10px;}
-.link{display:block;padding:8px 0;color:#1459c7;text-decoration:none;}
+.title{font-size:22px;font-weight:700;margin-bottom:10px;}
+.text{margin:10px 0;line-height:1.5;}
+.link{display:block;padding:8px 0;color:#1459c7;text-decoration:none;word-break:break-word;}
 </style>
 </head>
 <body>
@@ -25,41 +26,73 @@ body{margin:0;font-family:Arial,sans-serif;background:#f7f2eb;color:#3d3128;}
 
 <script>
 function getParam(name){
-return new URLSearchParams(window.location.search).get(name);
+  return new URLSearchParams(window.location.search).get(name);
+}
+
+function esc(text){
+  return String(text || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function stripHtml(text){
+  return String(text || "").replace(/<[^>]*>/g,"").trim();
+}
+
+function shortText(text, maxLength = 80){
+  const clean = stripHtml(text);
+  if (!clean) return "";
+  return clean.length > maxLength ? clean.slice(0, maxLength) + "..." : clean;
+}
+
+function getDisplayTitle(post, index){
+  if (post.attachments && post.attachments.length && post.attachments[0].name) {
+    return post.attachments[0].name;
+  }
+
+  const bodyText = shortText(post.body, 80);
+  if (bodyText) return bodyText;
+
+  return "Eintrag " + (index + 1);
 }
 
 async function load(){
-const board=getParam("board");
-const section=getParam("section");
-const content=document.getElementById("content");
+  const board = getParam("board");
+  const section = getParam("section");
+  const content = document.getElementById("content");
 
-try{
-const res=await fetch("/api/boards?id="+board);
-const data=await res.json();
+  try{
+    const res = await fetch("/api/boards?id=" + board);
+    const data = await res.json();
 
-const posts=(data.posts||[]).filter(x=>x.sectionId==section);
+    const posts = (data.posts || []).filter(x => x.sectionId == section);
 
-let html="";
+    let html = "";
 
-posts.forEach(post=>{
-html+=`<div class="card">`;
-html+=`<div class="title">${post.title||"Eintrag"}</div>`;
-html+=`<div>${post.body||""}</div>`;
+    posts.forEach((post, index) => {
+      html += `<div class="card">`;
+      html += `<div class="title">${esc(getDisplayTitle(post, index))}</div>`;
 
-if(post.attachments){
-post.attachments.forEach(file=>{
-html+=`<a class="link" href="${file.url}" target="_blank">📄 ${file.name||"Datei öffnen"}</a>`;
-});
-}
+      if (post.body) {
+        html += `<div class="text">${post.body}</div>`;
+      }
 
-html+=`</div>`;
-});
+      if (post.attachments && post.attachments.length) {
+        post.attachments.forEach(file => {
+          html += `<a class="link" href="${file.url}" target="_blank">📄 ${esc(file.name || "Datei öffnen")}</a>`;
+        });
+      }
 
-content.innerHTML=html || "Keine Inhalte gefunden.";
+      html += `</div>`;
+    });
 
-}catch(e){
-content.innerHTML="Fehler beim Laden.";
-}
+    content.innerHTML = html || "Keine Inhalte gefunden.";
+
+  } catch(e){
+    content.innerHTML = "Fehler beim Laden.";
+  }
 }
 
 load();
