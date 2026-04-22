@@ -1,1 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bereich</title>
 
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#e9e4dc;
+margin:0;
+padding:40px;
+color:#222;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+a.back{
+display:inline-block;
+margin-bottom:30px;
+text-decoration:none;
+color:#222;
+font-weight:bold;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:18px;
+box-shadow:0 8px 18px rgba(0,0,0,0.08);
+}
+
+h1{
+margin-top:0;
+font-size:34px;
+}
+
+p{
+font-size:18px;
+line-height:1.5;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<a class="back" href="/">← Zurück</a>
+
+<div class="card">
+<h1 id="title">Bereich</h1>
+<p>Dieser Bereich wurde geöffnet.</p>
+</div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const title = params.get("title");
+
+if(title){
+document.getElementById("title").textContent = decodeURIComponent(title);
+document.title = decodeURIComponent(title);
+}
+</script>
+
+</body>
+</html>
