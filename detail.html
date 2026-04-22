@@ -43,6 +43,19 @@
       margin:10px 0;
       line-height:1.5;
       white-space:pre-line;
+      word-break:break-word;
+    }
+
+    .debug{
+      margin-top:14px;
+      padding:14px;
+      background:#f4eee7;
+      border-radius:12px;
+      font-family:monospace;
+      font-size:13px;
+      line-height:1.45;
+      white-space:pre-wrap;
+      overflow-x:auto;
     }
 
     .link{
@@ -78,82 +91,12 @@
         .replace(/"/g,"&quot;");
     }
 
-    function asText(value){
-      if (value === null || value === undefined) return "";
-      if (typeof value === "string") return value.trim();
-      if (typeof value === "number" || typeof value === "boolean") return String(value);
-      if (Array.isArray(value)) return value.map(asText).filter(Boolean).join("\n");
-      if (typeof value === "object") {
-        if (typeof value.text === "string") return value.text.trim();
-        if (typeof value.value === "string") return value.value.trim();
-        if (typeof value.content === "string") return value.content.trim();
-        return "";
+    function cut(obj){
+      try{
+        return JSON.stringify(obj, null, 2).slice(0, 3000);
+      }catch(e){
+        return "JSON konnte nicht dargestellt werden.";
       }
-      return "";
-    }
-
-    function firstLine(value){
-      const text = asText(value);
-      if (!text) return "";
-      return text.split("\n")[0].trim();
-    }
-
-    function getTitle(post,index){
-      const title = asText(post.title);
-      if (title && title !== "Ohne Titel") return title;
-
-      const subject = asText(post.subject);
-      if (subject) return subject;
-
-      const textLine = firstLine(post.text);
-      if (textLine) return textLine;
-
-      const url = asText(post.url);
-      if (url) return url;
-
-      if (post.attachments && post.attachments.length){
-        const firstAttachment = post.attachments[0];
-        if (firstAttachment){
-          const fileName = asText(firstAttachment.name);
-          if (fileName) return fileName;
-        }
-      }
-
-      return "Eintrag " + (index + 1);
-    }
-
-    function renderPost(post,index){
-      const title = getTitle(post,index);
-      const text = asText(post.text);
-      const url = asText(post.url);
-
-      let html = "";
-      html += `<div class="card">`;
-      html += `<div class="title">${esc(title)}</div>`;
-
-      if (text && text !== title){
-        html += `<div class="text">${esc(text)}</div>`;
-      }
-
-      if (url){
-        html += `<a class="link" href="${esc(url)}" target="_blank" rel="noopener noreferrer">🔗 Link öffnen</a>`;
-      }
-
-      if (post.attachments && post.attachments.length){
-        post.attachments.forEach(file => {
-          if (!file) return;
-
-          const fileUrl = asText(file.url);
-          const fileName = asText(file.name) || "Datei öffnen";
-
-          if (fileUrl){
-            html += `<a class="link" href="${esc(fileUrl)}" target="_blank" rel="noopener noreferrer">📄 ${esc(fileName)}</a>`;
-          }
-        });
-      }
-
-      html += `</div>`;
-      return html;
     }
 
     async function load(){
@@ -164,7 +107,7 @@
       if (!board){
         content.innerHTML = `
           <div class="card">
-            <div class="title">Fehler beim Laden</div>
+            <div class="title">Fehler</div>
             <div class="text">Keine Board-ID gefunden.</div>
           </div>
         `;
@@ -177,28 +120,38 @@
 
         const allPosts = Array.isArray(data.posts) ? data.posts : [];
 
-        let posts = [];
+        const posts = section
+          ? allPosts.filter(post => String(post.sectionId || "") === String(section))
+          : allPosts;
 
-        if (section){
-          posts = allPosts.filter(post =>
-            String(post.sectionId || "") === String(section)
-          );
-        } else {
-          posts = allPosts;
+        if (!posts.length){
+          content.innerHTML = `
+            <div class="card">
+              <div class="title">Keine Inhalte gefunden</div>
+              <div class="text">Für diese section wurden keine Einträge gefunden.</div>
+            </div>
+          `;
+          return;
         }
 
         let html = "";
 
-        posts.forEach((post,index) => {
-          html += renderPost(post,index);
+        posts.forEach((post, index) => {
+          html += `
+            <div class="card">
+              <div class="title">Eintrag ${index + 1}</div>
+              <div class="text"><strong>title:</strong> ${esc(post.title)}</div>
+              <div class="text"><strong>subject:</strong> ${esc(post.subject)}</div>
+              <div class="text"><strong>text:</strong> ${esc(typeof post.text === "string" ? post.text : JSON.stringify(post.text))}</div>
+              <div class="text"><strong>url:</strong> ${esc(post.url)}</div>
+              <div class="text"><strong>sectionId:</strong> ${esc(post.sectionId)}</div>
+              <div class="text"><strong>attachments:</strong> ${esc(JSON.stringify(post.attachments))}</div>
+              <div class="debug">${esc(cut(post))}</div>
+            </div>
+          `;
         });
 
-        content.innerHTML = html || `
-          <div class="card">
-            <div class="title">Keine Inhalte gefunden</div>
-            <div class="text">Für diesen Bereich wurden keine Einträge gefunden.</div>
-          </div>
-        `;
+        content.innerHTML = html;
 
       } catch(error){
         content.innerHTML = `
