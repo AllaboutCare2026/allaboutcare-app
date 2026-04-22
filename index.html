@@ -1,70 +1,176 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>All About Care</title>
-<style>
-body{
-font-family:Arial,sans-serif;
-margin:0;
-background:#f4f4f4;
-color:#222;
-}
-header{
-background:#111;
-color:white;
-padding:30px;
-text-align:center;
-}
-main{
-max-width:1000px;
-margin:auto;
-padding:30px;
-}
-.card{
-background:white;
-padding:25px;
-border-radius:14px;
-box-shadow:0 8px 20px rgba(0,0,0,0.08);
-margin-bottom:30px;
-}
-iframe{
-width:100%;
-height:700px;
-border:none;
-border-radius:12px;
-}
-button{
-padding:12px 20px;
-border:none;
-background:#111;
-color:white;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All About Care</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f4ef;
+      color: #1f1f1f;
+    }
+
+    .hero {
+      padding: 70px 20px 50px;
+      text-align: center;
+      background: linear-gradient(180deg, #f3ede3 0%, #f7f4ef 100%);
+    }
+
+    .hero h1 {
+      margin: 0 0 16px;
+      font-size: 44px;
+      line-height: 1.1;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: 19px;
+      line-height: 1.6;
+      color: #4b4b4b;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px 70px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 22px;
+      margin-top: -10px;
+      margin-bottom: 50px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 24px;
+    }
+
+    .card p {
+      margin: 0;
+      line-height: 1.6;
+      color: #555;
+    }
+
+    .section-title {
+      font-size: 30px;
+      margin: 0 0 16px;
+    }
+
+    .section-text {
+      max-width: 760px;
+      line-height: 1.7;
+      color: #4f4f4f;
+      margin-bottom: 24px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 38px;
+    }
+
+    .button {
+      display: inline-block;
+      background: #1f1f1f;
+      color: white;
+      text-decoration: none;
+      padding: 14px 20px;
+      border-radius: 999px;
+      font-size: 16px;
+    }
+
+    .embed-box {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+
+    iframe {
+      width: 100%;
+      height: 680px;
+      border: 0;
+      border-radius: 16px;
+      background: white;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px 50px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
+  <section class="hero">
+    <h1>All About Care</h1>
+    <p>
+      Eine zentrale Plattform für Informationen, Materialien und aktuelle Inhalte.
+      Die Website wird Schritt für Schritt aufgebaut und dient als strukturierte Oberfläche
+      für eure Padlet-Inhalte.
+    </p>
+  </section>
 
-<header>
-<h1>All About Care</h1>
-<p>Informationen, Neuigkeiten und Inhalte</p>
-</header>
+  <main class="wrap">
+    <section class="grid">
+      <div class="card">
+        <h2>Neuigkeiten</h2>
+        <p>Aktuelle Hinweise, neue Inhalte und wichtige Updates.</p>
+      </div>
+      <div class="card">
+        <h2>Materialien</h2>
+        <p>Dokumente, Sammlungen und hilfreiche Unterlagen an einem Ort.</p>
+      </div>
+      <div class="card">
+        <h2>Kategorien</h2>
+        <p>Klare thematische Bereiche statt einer unübersichtlichen Sammlung.</p>
+      </div>
+      <div class="card">
+        <h2>Gemeinsame Pflege</h2>
+        <p>Inhalte können intern im Padlet bearbeitet und hier sichtbar gemacht werden.</p>
+      </div>
+    </section>
 
-<main>
+    <section>
+      <h2 class="section-title">Aktuelles</h2>
+      <p class="section-text">
+        Unten ist vorerst der Bereich „Neuigkeiten“ eingebunden. Das ist nur die Übergangslösung.
+        Im nächsten Schritt sollten wir die Inhalte nicht mehr als komplettes Padlet zeigen,
+        sondern in einem eigenen, deutlich ruhigeren Layout.
+      </p>
 
-<div class="card">
-<h2>Neuigkeiten</h2>
-<p>Aktuelle Informationen aus unserem Padlet.</p>
-</div>
+      <div class="button-row">
+        <a class="button" href="https://padlet.com/allaboutcare/1-neuigkeiten-tp004cnxfqycepwe" target="_blank">Neuigkeiten direkt öffnen</a>
+      </div>
 
-<div class="card">
-<iframe src="https://padlet.com/allaboutcare/1-neuigkeiten-tp004cnxfqycepwe"></iframe>
-</div>
+      <div class="embed-box">
+        <iframe src="https://padlet.com/allaboutcare/1-neuigkeiten-tp004cnxfqycepwe"></iframe>
+      </div>
+    </section>
+  </main>
 
-</main>
-
+  <footer>
+    All About Care
+  </footer>
 </body>
 </html>
