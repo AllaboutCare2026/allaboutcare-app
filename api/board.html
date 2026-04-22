@@ -1,1 +1,135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bereich</title>
+  <style>
+    * { box-sizing: border-box; }
 
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f6f1ea;
+      color: #1f1f1f;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 50px 20px;
+    }
+
+    .back {
+      display: inline-block;
+      margin-bottom: 24px;
+      color: #333;
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    h1 {
+      font-size: 42px;
+      margin: 0 0 12px;
+    }
+
+    .status {
+      color: #666;
+      margin-bottom: 28px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-size: 24px;
+      line-height: 1.3;
+    }
+
+    .card p {
+      margin: 0 0 16px;
+      color: #5b5b5b;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .card a {
+      color: #111;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="/">← Zurück zur Übersicht</a>
+    <h1 id="title">Bereich</h1>
+    <div id="status" class="status">Lade Inhalte …</div>
+    <div id="grid" class="grid"></div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const boardId = params.get("id");
+    const boardTitle = params.get("title") || "Bereich";
+
+    document.getElementById("title").textContent = boardTitle;
+
+    async function loadBoard() {
+      const status = document.getElementById("status");
+      const grid = document.getElementById("grid");
+
+      if (!boardId) {
+        status.textContent = "Keine Board-ID gefunden.";
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/board?id=${encodeURIComponent(boardId)}`);
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || "Fehler beim Laden");
+        }
+
+        const posts = data.posts || [];
+
+        status.textContent = posts.length ? "" : "Keine Inhalte gefunden.";
+
+        grid.innerHTML = posts.map(post => `
+          <div class="card">
+            <h2>${escapeHtml(post.title)}</h2>
+            <p>${escapeHtml(post.text || "")}</p>
+            ${post.url ? `<a href="${post.url}" target="_blank" rel="noopener noreferrer">Öffnen</a>` : ""}
+          </div>
+        `).join("");
+      } catch (error) {
+        status.textContent = "Inhalte konnten nicht geladen werden.";
+        console.error(error);
+      }
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    loadBoard();
+  </script>
+</body>
+</html>
