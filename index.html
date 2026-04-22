@@ -233,7 +233,17 @@
           throw new Error("Keine Boards gefunden");
         }
 
-        const boards = data.boards.slice(0, 20);
+        const boards = data.boards
+  .sort((a, b) => {
+    const aMatch = (a.title || "").match(/^(\d+)/);
+    const bMatch = (b.title || "").match(/^(\d+)/);
+
+    const aNum = aMatch ? parseInt(aMatch[1], 10) : 9999;
+    const bNum = bMatch ? parseInt(bMatch[1], 10) : 9999;
+
+    return aNum - bNum;
+  })
+  .slice(0, 20);
 
         grid.innerHTML = boards.map(createCard).join("");
         status.style.display = "none";
