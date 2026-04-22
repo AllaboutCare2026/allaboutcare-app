@@ -17,26 +17,13 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     const included = Array.isArray(data.included) ? data.included : [];
+    const posts = included.filter(item => item.type === "post" || item.type === "posts");
 
-    const posts = included
-      .filter(item => item.type === "post" || item.type === "posts")
-      .map(item => ({
-        id: item.id,
-        title:
-          item.attributes?.title ||
-          item.attributes?.subject ||
-          "Ohne Titel",
-        text:
-          item.attributes?.content ||
-          item.attributes?.body ||
-          "",
-        url:
-          item.attributes?.attachment_url ||
-          item.attributes?.url ||
-          ""
-      }));
-
-    res.status(200).json({ posts });
+    res.status(200).json({
+      count: posts.length,
+      firstPost: posts[0] || null,
+      posts: posts.slice(0, 3)
+    });
   } catch (error) {
     res.status(500).json({
       error: "Fehler beim Laden des Boards",
