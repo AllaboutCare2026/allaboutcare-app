@@ -3,258 +3,212 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>All About Care</title>
+  <title>Meine Wissensseite</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
-      margin: 0;
       font-family: Arial, sans-serif;
-      background: #f7f2eb;
-      color: #3d3128;
-    }
-
-    .topbar {
-      background: #fffaf5;
-      border-bottom: 1px solid #eadfce;
-      padding: 22px 28px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .title {
       margin: 0;
-      font-size: 34px;
-      font-weight: 700;
-      color: #5b4636;
+      padding: 0;
+      background: #f5f6fa;
+      color: #222;
     }
 
-    .subtitle {
-      margin-top: 6px;
-      font-size: 15px;
-      color: #8a7463;
+    header {
+      background: #ffffff;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
-    .container {
-      padding: 28px;
+    h1 {
+      margin: 0;
+      font-size: 28px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 24px;
+    main {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px 40px;
+    }
+
+    .info-box {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .info-box p {
+      margin: 0;
+      line-height: 1.5;
     }
 
     .card {
-      display: block;
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      font-size: 22px;
+    }
+
+    .card p {
+      margin-top: 0;
+      line-height: 1.5;
+    }
+
+    .links {
+      margin-top: 14px;
+      padding-left: 20px;
+    }
+
+    .links li {
+      margin-bottom: 10px;
+    }
+
+    .links a {
+      color: #1459c7;
       text-decoration: none;
-      color: inherit;
-      background: #fffaf5;
-      border-radius: 22px;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(80, 58, 39, 0.08);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
-      min-height: 290px;
-      border: 1px solid #eee2d4;
+      word-break: break-word;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 32px rgba(80, 58, 39, 0.12);
-    }
-
-    .card-image,
-    .card-color {
-      height: 190px;
-      width: 100%;
-      display: flex;
-      align-items: flex-end;
-      justify-content: flex-start;
-      padding: 18px;
-      position: relative;
-    }
-
-    .card-image {
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    .card-image::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(61,49,40,0.45), rgba(61,49,40,0.05));
-    }
-
-    .card-image-title {
-      position: relative;
-      z-index: 1;
-      color: white;
-      font-size: 22px;
-      font-weight: 700;
-      line-height: 1.2;
-    }
-
-    .card-body {
-      padding: 18px 18px 20px 18px;
-    }
-
-    .card-title {
-      font-size: 22px;
-      font-weight: 700;
-      line-height: 1.2;
-      margin: 0 0 10px 0;
-      color: #4e3e31;
-    }
-
-    .card-text {
-      margin: 0;
-      color: #866f5f;
-      font-size: 15px;
-      line-height: 1.45;
+    .links a:hover {
+      text-decoration: underline;
     }
 
     .loading,
-    .error {
-      font-size: 18px;
-      padding: 24px 0;
-      color: #7a6556;
-    }
-
-    @media (max-width: 1200px) {
-      .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 640px) {
-      .container {
-        padding: 18px;
-      }
-
-      .topbar {
-        padding: 18px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .title {
-        font-size: 28px;
-      }
+    .error,
+    .empty {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <h1 class="title">All About Care</h1>
-    <div class="subtitle">Übersicht</div>
+  <header>
+    <h1>Meine Wissensseite</h1>
   </header>
 
-  <main class="container">
-    <div id="status" class="loading">Kacheln werden geladen ...</div>
-    <div id="grid" class="grid" style="display:none;"></div>
+  <main>
+    <div class="info-box">
+      <p>
+        Diese Seite lädt die Inhalte automatisch aus deinem Padlet.
+        Änderungen im Padlet werden nach dem Neuladen der Seite übernommen.
+      </p>
+    </div>
+
+    <div id="content" class="loading">Inhalte werden geladen ...</div>
   </main>
 
   <script>
-    const fallbackColors = [
-      "#d9a98f",
-      "#b7c9a8",
-      "#e7c89b",
-      "#c8b6d8",
-      "#9fc7c1",
-      "#e6b8b7",
-      "#d4c29a",
-      "#a8bfd8",
-      "#d9bfa7",
-      "#b8d8c1"
-    ];
+    const boardId = "HIER_DEINE_BOARD_ID_EINTRAGEN";
+    const apiUrl = `/api/boards?id=${boardId}`;
+    const content = document.getElementById("content");
 
-    function escapeHtml(text) {
-      return String(text || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    function extractLinksFromText(text) {
+      if (!text) return [];
+      const regex = /(https?:\/\/[^\s"<]+)/g;
+      return text.match(regex) || [];
     }
 
-    function createCard(board, index) {
-      const color = fallbackColors[index % fallbackColors.length];
-      const title = escapeHtml(board.title || "Ohne Titel");
-      const image = board.image || board.cover || board.thumbnail || "";
-
-      if (image) {
-        return `
-          <a class="card" href="board.html?id=${encodeURIComponent(board.id)}">
-            <div class="card-image" style="background-image:url('${image}')">
-              <div class="card-image-title">${title}</div>
-            </div>
-            <div class="card-body">
-              <p class="card-text">Weiter</p>
-            </div>
-          </a>
-        `;
+    function renderPosts(posts) {
+      if (!posts || posts.length === 0) {
+        content.className = "empty";
+        content.innerHTML = "Keine Inhalte gefunden.";
+        return;
       }
 
-      return `
-        <a class="card" href="board.html?id=${encodeURIComponent(board.id)}">
-          <div class="card-color" style="background:${color};">
-            <div class="card-image-title">${title}</div>
-          </div>
-          <div class="card-body">
-            <h2 class="card-title">${title}</h2>
-            <p class="card-text">Weiter</p>
-          </div>
-        </a>
-      `;
-    }
+      content.className = "";
+      content.innerHTML = "";
 
-    async function loadBoards() {
-      const status = document.getElementById("status");
-      const grid = document.getElementById("grid");
+      posts.forEach((post) => {
+        const card = document.createElement("div");
+        card.className = "card";
 
-      try {
-        const response = await fetch("/api/me");
-        const data = await response.json();
+        const title = document.createElement("h2");
+        title.textContent = post.title || "Ohne Titel";
+        card.appendChild(title);
 
-        if (!data.boards || !Array.isArray(data.boards)) {
-          throw new Error("Keine Boards gefunden");
+        if (post.body) {
+          const text = document.createElement("p");
+          text.textContent = post.body;
+          card.appendChild(text);
         }
 
-        const boards = data.boards
-  .sort((a, b) => {
-    const aMatch = (a.title || "").match(/^(\d+)/);
-    const bMatch = (b.title || "").match(/^(\d+)/);
+        const allLinks = [];
 
-    const aNum = aMatch ? parseInt(aMatch[1], 10) : 9999;
-    const bNum = bMatch ? parseInt(bMatch[1], 10) : 9999;
+        const textLinks = extractLinksFromText(post.body);
+        textLinks.forEach((link) => {
+          allLinks.push({
+            name: link,
+            url: link
+          });
+        });
 
-    return aNum - bNum;
-  })
-  .slice(0, 20);
+        if (post.attachments && Array.isArray(post.attachments)) {
+          post.attachments.forEach((file) => {
+            if (file.url) {
+              allLinks.push({
+                name: file.name || "Datei öffnen",
+                url: file.url
+              });
+            }
+          });
+        }
 
-        grid.innerHTML = boards.map(createCard).join("");
-        status.style.display = "none";
-        grid.style.display = "grid";
+        if (allLinks.length > 0) {
+          const list = document.createElement("ul");
+          list.className = "links";
+
+          allLinks.forEach((item) => {
+            const li = document.createElement("li");
+            const a = document.createElement("a");
+            a.href = item.url;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.textContent = item.name;
+            li.appendChild(a);
+            list.appendChild(li);
+          });
+
+          card.appendChild(list);
+        }
+
+        content.appendChild(card);
+      });
+    }
+
+    async function loadPadletContent() {
+      try {
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+          throw new Error("API konnte nicht geladen werden.");
+        }
+
+        const data = await response.json();
+
+        if (!data || !data.posts) {
+          throw new Error("Keine gültigen Daten erhalten.");
+        }
+
+        renderPosts(data.posts);
       } catch (error) {
-        status.className = "error";
-        status.textContent = "Die Kacheln konnten nicht geladen werden.";
+        content.className = "error";
+        content.innerHTML = "Fehler beim Laden der Inhalte.";
+        console.error(error);
       }
     }
 
-    loadBoards();
+    loadPadletContent();
   </script>
 </body>
 </html>
