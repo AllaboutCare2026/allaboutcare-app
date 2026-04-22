@@ -1,20 +1,23 @@
 export default async function handler(req, res) {
   try {
     const apiKey = process.env.PADLET_API_KEY;
-    const boardId = "m4lpvae8jyAKvxvo";
 
-    const response = await fetch(`https://api.padlet.dev/v1/boards/${boardId}`, {
+    const response = await fetch("https://api.padlet.dev/v1/me", {
       headers: {
         "X-Api-Key": apiKey,
         Accept: "application/vnd.api+json"
       }
     });
 
-    const text = await response.text();
+    const data = await response.json();
 
-    res.setHeader("Content-Type", "text/plain; charset=utf-8");
-    return res.status(response.status).send(text.substring(0, 4000));
+    const boards = data.data?.relationships?.boards?.data || [];
+
+    return res.status(200).json({ boards });
   } catch (error) {
-    return res.status(500).send("Fehler: " + error.message);
+    return res.status(500).json({
+      error: "Fehler beim Laden der Boards",
+      details: String(error)
+    });
   }
 }
