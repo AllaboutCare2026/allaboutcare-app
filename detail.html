@@ -3,59 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>All About Care</title>
+<title>Test</title>
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#f7f2eb;color:#3d3128;}
-.topbar{background:#fffaf5;padding:22px 28px;border-bottom:1px solid #eadfce;}
-.container{padding:28px;max-width:1100px;margin:auto;}
-.card{background:#fffaf5;padding:20px;border-radius:18px;margin-bottom:18px;box-shadow:0 8px 24px rgba(80,58,39,.08);}
-.title{font-size:22px;font-weight:700;margin-bottom:10px;}
-.text{margin:10px 0;line-height:1.5;}
-.link{display:block;padding:8px 0;color:#1459c7;text-decoration:none;word-break:break-word;}
+body{font-family:Arial,sans-serif;padding:20px;background:#f7f2eb;}
+pre{background:white;padding:15px;border-radius:12px;overflow:auto;}
 </style>
 </head>
 <body>
-
-<div class="topbar">
-<a href="javascript:history.back()">← Zurück</a>
-</div>
-
-<div class="container">
-<div id="content">Inhalte werden geladen ...</div>
-</div>
+<div id="content">Lädt ...</div>
 
 <script>
 function getParam(name){
   return new URLSearchParams(window.location.search).get(name);
-}
-
-function esc(text){
-  return String(text || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;");
-}
-
-function stripHtml(text){
-  return String(text || "").replace(/<[^>]*>/g,"").trim();
-}
-
-function shortText(text, maxLength = 80){
-  const clean = stripHtml(text);
-  if (!clean) return "";
-  return clean.length > maxLength ? clean.slice(0, maxLength) + "..." : clean;
-}
-
-function getDisplayTitle(post, index){
-  if (post.attachments && post.attachments.length && post.attachments[0].name) {
-    return post.attachments[0].name;
-  }
-
-  const bodyText = shortText(post.body, 80);
-  if (bodyText) return bodyText;
-
-  return "Eintrag " + (index + 1);
 }
 
 async function load(){
@@ -66,37 +25,14 @@ async function load(){
   try{
     const res = await fetch("/api/boards?id=" + board);
     const data = await res.json();
-
     const posts = (data.posts || []).filter(x => x.sectionId == section);
-
-    let html = "";
-
-    posts.forEach((post, index) => {
-      html += `<div class="card">`;
-      html += `<div class="title">${esc(getDisplayTitle(post, index))}</div>`;
-
-      if (post.body) {
-        html += `<div class="text">${post.body}</div>`;
-      }
-
-      if (post.attachments && post.attachments.length) {
-        post.attachments.forEach(file => {
-          html += `<a class="link" href="${file.url}" target="_blank">📄 ${esc(file.name || "Datei öffnen")}</a>`;
-        });
-      }
-
-      html += `</div>`;
-    });
-
-    content.innerHTML = html || "Keine Inhalte gefunden.";
-
-  } catch(e){
-    content.innerHTML = "Fehler beim Laden.";
+    content.innerHTML = "<pre>" + JSON.stringify(posts, null, 2) + "</pre>";
+  }catch(e){
+    content.textContent = "Fehler beim Laden.";
   }
 }
 
 load();
 </script>
-
 </body>
 </html>
