@@ -12,159 +12,293 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #f7f4ef;
+      background: #f6f1ea;
       color: #1f1f1f;
     }
 
     .hero {
-      padding: 70px 20px 50px;
-      text-align: center;
-      background: linear-gradient(180deg, #f3ede3 0%, #f7f4ef 100%);
+      background: linear-gradient(180deg, #efe4d6 0%, #f6f1ea 100%);
+      padding: 90px 20px 70px;
+    }
+
+    .hero-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
     }
 
     .hero h1 {
-      margin: 0 0 16px;
-      font-size: 44px;
-      line-height: 1.1;
+      font-size: 54px;
+      line-height: 1.05;
+      margin: 0 0 20px;
     }
 
     .hero p {
-      max-width: 760px;
-      margin: 0 auto;
-      font-size: 19px;
-      line-height: 1.6;
-      color: #4b4b4b;
-    }
-
-    .wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 20px 70px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 22px;
-      margin-top: -10px;
-      margin-bottom: 50px;
-    }
-
-    .card {
-      background: #ffffff;
-      border-radius: 20px;
-      padding: 28px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-    }
-
-    .card h2 {
-      margin-top: 0;
-      margin-bottom: 12px;
-      font-size: 24px;
-    }
-
-    .card p {
-      margin: 0;
-      line-height: 1.6;
-      color: #555;
-    }
-
-    .section-title {
-      font-size: 30px;
-      margin: 0 0 16px;
-    }
-
-    .section-text {
-      max-width: 760px;
+      font-size: 20px;
       line-height: 1.7;
-      color: #4f4f4f;
-      margin-bottom: 24px;
+      margin: 0 0 28px;
+      max-width: 650px;
+      color: #4c4c4c;
     }
 
     .button-row {
       display: flex;
       flex-wrap: wrap;
       gap: 14px;
-      margin-bottom: 38px;
     }
 
     .button {
       display: inline-block;
-      background: #1f1f1f;
-      color: white;
-      text-decoration: none;
-      padding: 14px 20px;
+      padding: 14px 22px;
       border-radius: 999px;
+      text-decoration: none;
       font-size: 16px;
+      font-weight: bold;
     }
 
-    .embed-box {
+    .button-dark {
+      background: #1f1f1f;
+      color: #ffffff;
+    }
+
+    .button-light {
+      background: #ffffff;
+      color: #1f1f1f;
+      border: 1px solid #ddd2c4;
+    }
+
+    .hero-card {
+      background: rgba(255,255,255,0.72);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: 0 14px 38px rgba(0,0,0,0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-card h3 {
+      margin: 0 0 18px;
+      font-size: 24px;
+    }
+
+    .hero-card ul {
+      margin: 0;
+      padding-left: 18px;
+      line-height: 1.9;
+      color: #4d4d4d;
+    }
+
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 70px 20px;
+    }
+
+    .section-label {
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8b7765;
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+
+    .section-title {
+      font-size: 38px;
+      margin: 0 0 14px;
+    }
+
+    .section-text {
+      max-width: 760px;
+      font-size: 18px;
+      line-height: 1.7;
+      color: #555;
+      margin-bottom: 34px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 22px;
+    }
+
+    .card {
       background: #ffffff;
       border-radius: 24px;
-      padding: 18px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      padding: 28px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+      min-height: 220px;
     }
 
-    iframe {
-      width: 100%;
-      height: 680px;
-      border: 0;
-      border-radius: 16px;
-      background: white;
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 24px;
+    }
+
+    .card p {
+      margin: 0;
+      color: #565656;
+      line-height: 1.7;
+    }
+
+    .feature-box {
+      margin-top: 70px;
+      background: #ffffff;
+      border-radius: 30px;
+      padding: 34px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .feature-box h3 {
+      margin-top: 0;
+      font-size: 30px;
+      margin-bottom: 16px;
+    }
+
+    .feature-box p {
+      margin: 0;
+      color: #555;
+      line-height: 1.8;
+      font-size: 17px;
+    }
+
+    .mini-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .mini-item {
+      background: #f7f2ec;
+      border-radius: 18px;
+      padding: 18px 20px;
+    }
+
+    .mini-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 17px;
     }
 
     footer {
+      padding: 36px 20px 50px;
       text-align: center;
-      padding: 30px 20px 50px;
-      color: #666;
+      color: #6a6a6a;
       font-size: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner,
+      .feature-box {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding: 70px 20px 50px;
+      }
+
+      .hero h1 {
+        font-size: 40px;
+      }
+
+      .section-title {
+        font-size: 30px;
+      }
     }
   </style>
 </head>
 <body>
   <section class="hero">
-    <h1>All About Care</h1>
-    <p>
-      Eine zentrale Plattform für Informationen, Materialien und aktuelle Inhalte.
-      Die Website wird Schritt für Schritt aufgebaut und dient als strukturierte Oberfläche
-      für eure Padlet-Inhalte.
-    </p>
+    <div class="hero-inner">
+      <div>
+        <div class="section-label">All About Care</div>
+        <h1>Wissen, Materialien und aktuelle Inhalte an einem Ort</h1>
+        <p>
+          Diese Website wird als klare, ruhige Oberfläche für eure Inhalte aufgebaut.
+          Im Hintergrund könnt ihr eure Themen weiterhin intern pflegen, nach außen
+          soll die Seite aber eigenständig, professionell und übersichtlich wirken.
+        </p>
+        <div class="button-row">
+          <a href="#bereiche" class="button button-dark">Bereiche ansehen</a>
+          <a href="#aktuell" class="button button-light">Aktuelles</a>
+        </div>
+      </div>
+
+      <div class="hero-card">
+        <h3>Wofür diese Plattform gedacht ist</h3>
+        <ul>
+          <li>Neuigkeiten und wichtige Hinweise bündeln</li>
+          <li>Materialien strukturiert zugänglich machen</li>
+          <li>Wissen in klaren Themenbereichen ordnen</li>
+          <li>Inhalte intern pflegen, außen sauber darstellen</li>
+        </ul>
+      </div>
+    </div>
   </section>
 
   <main class="wrap">
-    <section class="grid">
-      <div class="card">
-        <h2>Neuigkeiten</h2>
-        <p>Aktuelle Hinweise, neue Inhalte und wichtige Updates.</p>
-      </div>
-      <div class="card">
-        <h2>Materialien</h2>
-        <p>Dokumente, Sammlungen und hilfreiche Unterlagen an einem Ort.</p>
-      </div>
-      <div class="card">
-        <h2>Kategorien</h2>
-        <p>Klare thematische Bereiche statt einer unübersichtlichen Sammlung.</p>
-      </div>
-      <div class="card">
-        <h2>Gemeinsame Pflege</h2>
-        <p>Inhalte können intern im Padlet bearbeitet und hier sichtbar gemacht werden.</p>
+    <section id="bereiche">
+      <div class="section-label">Bereiche</div>
+      <h2 class="section-title">Die wichtigsten Themen auf einen Blick</h2>
+      <p class="section-text">
+        Statt einer unruhigen Sammelansicht entsteht hier eine klare Struktur. Jeder Bereich
+        kann später mit eigenen Inhalten, Unterseiten oder Download-Sammlungen gefüllt werden.
+      </p>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Neuigkeiten</h3>
+          <p>Aktuelle Hinweise, neue Inhalte, Änderungen und wichtige Entwicklungen.</p>
+        </div>
+
+        <div class="card">
+          <h3>Materialien</h3>
+          <p>Dokumente, Übersichten, Arbeitsmaterialien und hilfreiche Sammlungen.</p>
+        </div>
+
+        <div class="card">
+          <h3>Wissen</h3>
+          <p>Fachlich geordnete Inhalte, die Schritt für Schritt ausgebaut werden können.</p>
+        </div>
+
+        <div class="card">
+          <h3>FAQ</h3>
+          <p>Wiederkehrende Fragen und kurze, klar strukturierte Antworten.</p>
+        </div>
       </div>
     </section>
 
-    <section>
-      <h2 class="section-title">Aktuelles</h2>
-      <p class="section-text">
-        Unten ist vorerst der Bereich „Neuigkeiten“ eingebunden. Das ist nur die Übergangslösung.
-        Im nächsten Schritt sollten wir die Inhalte nicht mehr als komplettes Padlet zeigen,
-        sondern in einem eigenen, deutlich ruhigeren Layout.
-      </p>
-
-      <div class="button-row">
-        <a class="button" href="https://padlet.com/allaboutcare/1-neuigkeiten-tp004cnxfqycepwe" target="_blank">Neuigkeiten direkt öffnen</a>
+    <section id="aktuell" class="feature-box">
+      <div>
+        <div class="section-label">Aktuell</div>
+        <h3>Die Seite steht – jetzt kommt die Struktur</h3>
+        <p>
+          Im nächsten Schritt bauen wir nicht mehr einfach sichtbare Fremdinhalte ein,
+          sondern eine eigene Inhaltslogik. Das heißt: eigene Unterseiten, eigene
+          Überschriften, eigene Teaser und später echte Inhaltsblöcke statt Rohansicht.
+        </p>
       </div>
 
-      <div class="embed-box">
-        <iframe src="https://padlet.com/allaboutcare/1-neuigkeiten-tp004cnxfqycepwe"></iframe>
+      <div class="mini-list">
+        <div class="mini-item">
+          <strong>Nächster sinnvoller Schritt</strong>
+          Als Nächstes bauen wir eine Unterseite für „Neuigkeiten“.
+        </div>
+        <div class="mini-item">
+          <strong>Danach</strong>
+          Dann kommen Materialien, Wissen und FAQ als eigene Bereiche.
+        </div>
+        <div class="mini-item">
+          <strong>Später</strong>
+          Erst wenn die Struktur steht, holen wir Inhalte gezielt aus dem Hintergrund.
+        </div>
       </div>
     </section>
   </main>
