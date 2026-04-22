@@ -1,96 +1,162 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>All About Care</title>
-<style>
-body{margin:0;font-family:Arial,sans-serif;background:#f7f2eb;color:#3d3128;}
-.topbar{background:#fffaf5;padding:22px 28px;border-bottom:1px solid #eadfce;}
-.container{padding:28px;max-width:1100px;margin:auto;}
-.card{background:#fffaf5;padding:20px;border-radius:18px;margin-bottom:18px;box-shadow:0 8px 24px rgba(80,58,39,.08);}
-.title{font-size:22px;font-weight:700;margin-bottom:10px;}
-.text{margin:10px 0;line-height:1.5;}
-.link{display:block;padding:8px 0;color:#1459c7;text-decoration:none;word-break:break-word;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All About Care</title>
+  <style>
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:#f7f2eb;
+      color:#3d3128;
+    }
+    .topbar{
+      background:#fffaf5;
+      padding:22px 28px;
+      border-bottom:1px solid #eadfce;
+    }
+    .container{
+      padding:28px;
+      max-width:1100px;
+      margin:auto;
+    }
+    .card{
+      background:#fffaf5;
+      padding:20px;
+      border-radius:18px;
+      margin-bottom:18px;
+      box-shadow:0 8px 24px rgba(80,58,39,.08);
+    }
+    .title{
+      font-size:22px;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+    .text{
+      margin:10px 0;
+      line-height:1.5;
+      white-space:pre-line;
+    }
+    .link{
+      display:block;
+      padding:8px 0;
+      color:#1459c7;
+      text-decoration:none;
+      word-break:break-word;
+    }
+    .hint{
+      color:#7a6a5d;
+      font-size:14px;
+      margin-top:8px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="topbar">
-<a href="javascript:history.back()">← Zurück</a>
-</div>
+  <div class="topbar">
+    <a href="javascript:history.back()">← Zurück</a>
+  </div>
 
-<div class="container">
-<div id="content">Inhalte werden geladen ...</div>
-</div>
+  <div class="container">
+    <div id="content">Inhalte werden geladen ...</div>
+  </div>
 
-<script>
-function getParam(name){
-  return new URLSearchParams(window.location.search).get(name);
-}
+  <script>
+    function getParam(name){
+      return new URLSearchParams(window.location.search).get(name);
+    }
 
-function esc(text){
-  return String(text || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;");
-}
+    function esc(text){
+      return String(text || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;");
+    }
 
-function pickTitle(post, index){
-  if (post.title && post.title !== "Ohne Titel") return post.title;
-  if (post.text && post.text.trim()) return post.text.trim();
-  if (post.url && post.url.trim()) return post.url.trim();
-  if (post.attachments && post.attachments.length && post.attachments[0].name) {
-    return post.attachments[0].name;
-  }
-  return "Eintrag " + (index + 1);
-}
+    function pickTitle(post, index){
+      if (post.title && post.title.trim() && post.title !== "Ohne Titel") return post.title.trim();
+      if (post.subject && post.subject.trim()) return post.subject.trim();
+      if (post.text && post.text.trim()) return post.text.trim().split("\n")[0];
+      if (post.url && post.url.trim()) return post.url.trim();
+      if (post.attachments && post.attachments.length && post.attachments[0].name) {
+        return post.attachments[0].name;
+      }
+      return "Eintrag " + (index + 1);
+    }
 
-async function load(){
-  const board = getParam("board");
-  const section = getParam("section");
-  const content = document.getElementById("content");
-
-  try{
-    const res = await fetch("/api/boards?id=" + board);
-    const data = await res.json();
-
-    const posts = (data.posts || []).filter(x => x.sectionId == section);
-
-    let html = "";
-
-    posts.forEach((post, index) => {
+    function buildCard(post, index){
       const title = pickTitle(post, index);
-
-      html += `<div class="card">`;
+      let html = `<div class="card">`;
       html += `<div class="title">${esc(title)}</div>`;
 
       if (post.text && post.text.trim() && post.text.trim() !== title) {
-        html += `<div class="text">${esc(post.text)}</div>`;
+        html += `<div class="text">${esc(post.text.trim())}</div>`;
       }
 
       if (post.url && post.url.trim()) {
-        html += `<a class="link" href="${post.url}" target="_blank">🔗 Link öffnen</a>`;
+        html += `<a class="link" href="${post.url}" target="_blank" rel="noopener noreferrer">🔗 Link öffnen</a>`;
       }
 
       if (post.attachments && post.attachments.length) {
         post.attachments.forEach(file => {
-          html += `<a class="link" href="${file.url}" target="_blank">📄 ${esc(file.name || "Datei öffnen")}</a>`;
+          if (file && file.url) {
+            html += `<a class="link" href="${file.url}" target="_blank" rel="noopener noreferrer">📄 ${esc(file.name || "Datei öffnen")}</a>`;
+          }
         });
       }
 
+      if (
+        (!post.text || !post.text.trim()) &&
+        (!post.url || !post.url.trim()) &&
+        (!post.attachments || !post.attachments.length)
+      ) {
+        html += `<div class="hint">Kein Link oder Anhang vorhanden.</div>`;
+      }
+
       html += `</div>`;
-    });
+      return html;
+    }
 
-    content.innerHTML = html || "Keine Inhalte gefunden.";
-  } catch(e){
-    content.innerHTML = "Fehler beim Laden.";
-  }
-}
+    async function load(){
+      const board = getParam("board");
+      const section = getParam("section");
+      const content = document.getElementById("content");
 
-load();
-</script>
+      if (!board) {
+        content.innerHTML = "Keine Board-ID gefunden.";
+        return;
+      }
+
+      try{
+        const res = await fetch("/api/boards?id=" + encodeURIComponent(board));
+        const data = await res.json();
+
+        const allPosts = Array.isArray(data.posts) ? data.posts : [];
+
+        let posts = [];
+        if (section) {
+          posts = allPosts.filter(post => String(post.sectionId || "") === String(section));
+        } else {
+          posts = allPosts;
+        }
+
+        let html = "";
+
+        posts.forEach((post, index) => {
+          html += buildCard(post, index);
+        });
+
+        content.innerHTML = html || "Keine Inhalte gefunden.";
+      } catch (e) {
+        content.innerHTML = "Fehler beim Laden.";
+        console.error(e);
+      }
+    }
+
+    load();
+  </script>
 
 </body>
 </html>
