@@ -69,7 +69,7 @@
       overflow: hidden;
       box-shadow: 0 8px 24px rgba(80, 58, 39, 0.08);
       transition: transform 0.18s ease, box-shadow 0.18s ease;
-      min-height: 280px;
+      min-height: 240px;
       border: 1px solid #eee2d4;
     }
 
@@ -78,49 +78,24 @@
       box-shadow: 0 16px 32px rgba(80, 58, 39, 0.12);
     }
 
-    .card-image,
     .card-color {
-      height: 180px;
+      height: 170px;
       width: 100%;
       display: flex;
       align-items: flex-end;
       justify-content: flex-start;
       padding: 18px;
-      position: relative;
     }
 
-    .card-image {
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-
-    .card-image::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(61,49,40,0.45), rgba(61,49,40,0.05));
-    }
-
-    .card-image-title {
-      position: relative;
-      z-index: 1;
+    .card-color-title {
       color: white;
-      font-size: 22px;
+      font-size: 26px;
       font-weight: 700;
       line-height: 1.2;
     }
 
     .card-body {
-      padding: 18px 18px 20px 18px;
-    }
-
-    .card-title {
-      font-size: 21px;
-      font-weight: 700;
-      line-height: 1.25;
-      margin: 0 0 10px 0;
-      color: #4e3e31;
+      padding: 18px;
     }
 
     .card-text {
@@ -172,7 +147,7 @@
   <header class="topbar">
     <a class="back-link" href="index.html">← Zurück zur Übersicht</a>
     <h1 id="pageTitle" class="title">Bereich</h1>
-    <div class="subtitle">Unterthemen</div>
+    <div class="subtitle">Kategorien</div>
   </header>
 
   <main class="container">
@@ -208,34 +183,57 @@
       return params.get(name);
     }
 
-    function createCard(post, index) {
-      const color = fallbackColors[index % fallbackColors.length];
-      const title = escapeHtml(post.title || "Ohne Titel");
-      const text = escapeHtml(post.text || "");
-      const image = post.image || post.cover || post.thumbnail || "";
-      const link = post.url || "#";
+    function extractSectionId(post) {
+      return post?.relationships?.section?.data?.id || "";
+    }
 
-      if (image) {
-        return `
-          <a class="card" href="${link}" target="_blank" rel="noopener noreferrer">
-            <div class="card-image" style="background-image:url('${image}')">
-              <div class="card-image-title">${title}</div>
-            </div>
-            <div class="card-body">
-              <p class="card-text">${text || "Öffnen"}</p>
-            </div>
-          </a>
-        `;
-      }
+    function extractSectionTitle(post) {
+      const sectionData = post?.relationships?.section?.data || {};
+      return (
+        sectionData.title ||
+        sectionData.name ||
+        sectionData.subject ||
+        ""
+      );
+    }
+
+    function getTitleFromPost(post) {
+      const attrs = post?.attributes || {};
+      return (
+        attrs.title ||
+        attrs.subject ||
+        attrs.name ||
+        attrs.headline ||
+        ""
+      );
+    }
+
+    function getSectionName(sectionId, postsInSection) {
+      const fromPost = postsInSection
+        .map(extractSectionTitle)
+        .find(Boolean);
+
+      if (fromPost) return fromPost;
+
+      const firstTitle = postsInSection
+        .map(getTitleFromPost)
+        .find(Boolean);
+
+      return firstTitle || "Ohne Titel";
+    }
+
+    function createCard(section, index, boardId) {
+      const color = fallbackColors[index % fallbackColors.length];
+      const title = escapeHtml(section.title || "Ohne Titel");
+      const countText = section.count === 1 ? "1 Eintrag" : `${section.count} Einträge`;
 
       return `
-        <a class="card" href="${link}" target="_blank" rel="noopener noreferrer">
+        <a class="card" href="detail.html?board=${encodeURIComponent(boardId)}&section=${encodeURIComponent(section.id)}">
           <div class="card-color" style="background:${color};">
-            <div class="card-image-title">${title}</div>
+            <div class="card-color-title">${title}</div>
           </div>
           <div class="card-body">
-            <h2 class="card-title">${title}</h2>
-            <p class="card-text">${text || "Öffnen"}</p>
+            <p class="card-text">${countText}</p>
           </div>
         </a>
       `;
@@ -271,15 +269,35 @@
           throw new Error("Keine Inhalte gefunden");
         }
 
-        const posts = data.posts.sort((a, b) => {
-          const aMatch = (a.title || "").match(/^(\d+)/);
-          const bMatch = (b.title || "").match(/^(\d+)/);
-          const aNum = aMatch ? parseInt(aMatch[1], 10) : 9999;
-          const bNum = bMatch ? parseInt(bMatch[1], 10) : 9999;
-          return aNum - bNum;
+        const posts = data.posts;
+        const sectionMap = new Map();
+
+        posts.forEach(post => {
+          const sectionId = extractSectionId(post);
+          if (!sectionId) return;
+
+          if (!sectionMap.has(sectionId)) {
+            sectionMap.set(sectionId, []);
+          }
+          sectionMap.get(sectionId).push(post);
         });
 
-        grid.innerHTML = posts.map(createCard).join("");
+        const sections = Array.from(sectionMap.entries()).map(([sectionId, sectionPosts]) => {
+          const rawTitle = getSectionName(sectionId, sectionPosts);
+          const match = String(rawTitle).match(/^(\d+)/);
+          const order = match ? parseInt(match[1], 10) : 9999;
+
+          return {
+            id: sectionId,
+            title: rawTitle,
+            count: sectionPosts.length,
+            order
+          };
+        });
+
+        sections.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "de"));
+
+        grid.innerHTML = sections.map((section, index) => createCard(section, index, boardId)).join("");
         status.style.display = "none";
         grid.style.display = "grid";
       } catch (error) {
